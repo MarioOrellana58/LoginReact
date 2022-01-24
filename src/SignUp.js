@@ -12,6 +12,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import Parse from 'parse/dist/parse.min.js';
 import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import loadingLogo from './assets/loading.gif';
 
 function Copyright(props) {
   return (
@@ -30,8 +32,9 @@ const theme = createTheme();
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (event) => {
+  const doUserRegistration = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const usernameValue = data.get('email');
@@ -42,11 +45,13 @@ export default function SignUp() {
         return;
     }
     try {
+        setIsLoading(true);
         // Since the signUp method returns a Promise, we need to call it using await
         const createdUser = await Parse.User.signUp(usernameValue, passwordValue);
         navigate("/NewBloodRequest");
         return true;
       } catch (error) {
+        setIsLoading(false);
         // signUp can fail if any parameter is blank or failed an uniqueness check on the server
         alert(`Error! ${error}`);
         return false;
@@ -71,7 +76,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Registro
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={doUserRegistration } sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -114,6 +119,11 @@ export default function SignUp() {
             >
               Registrarse
             </Button>
+              {isLoading &&
+                    <p align='center'>
+                        <img src={loadingLogo} alt="loading..."/>
+                    </p>
+                }
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link to="/">

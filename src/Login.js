@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -12,6 +10,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import Parse from 'parse/dist/parse.min.js';
+import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import loadingLogo from './assets/loading.gif';
 
 function Copyright(props) {
   return (
@@ -29,15 +31,28 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+
+  const doUserLogIn  = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    const usernameValue = data.get('email');
+    const passwordValue = data.get('password');
+    try {
+        setIsLoading(true);
+        const loggedInUser = await Parse.User.logIn(usernameValue, passwordValue);
+        // logIn returns the corresponding ParseUser object
+        navigate("/NewBloodRequest");
+        return true;
+    } catch (error) {
+    // Error can be caused by wrong parameters or lack of Internet connection
+    setIsLoading(false);
+    alert(`Error! ${error.message}`);
+    return false;
+    }
   };
 
   return (
@@ -74,7 +89,7 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Ingreso
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={doUserLogIn } sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -103,6 +118,11 @@ export default function SignInSide() {
               >
                 Ingresar
               </Button>
+              {isLoading &&
+                    <p align='center'>
+                        <img src={loadingLogo} alt="loading..."/>
+                    </p>
+                }
               <Grid container>
                 <Grid item>
                   <Link to="SignUp">
