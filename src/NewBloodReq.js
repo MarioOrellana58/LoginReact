@@ -50,6 +50,7 @@ export default function NewBloodReq () {
             //Save the Object
             let result = await bloodReq.save()
             alert('Solicitud enviada exitosamente #' + result.id);
+            window.location.reload();
         }catch(error){
             alert('La creación de la solicitud falló, código de error: ' + error.message);
         }

@@ -27,6 +27,7 @@ export default function BloodRquestForm ({setformDataFunction, formData}) {
                 id="completeName"
                 name="completeName"
                 label="Nombre"
+                value={formData.completeName}
                 fullWidth
                 variant="standard"
                 onChange = {(event) => setformDataFunction({...formData, completeName: event.target.value})}
@@ -39,6 +40,7 @@ export default function BloodRquestForm ({setformDataFunction, formData}) {
                 id="age"
                 name="age"
                 label="Edad"
+                value={formData.age}
                 fullWidth
                 variant="standard"
                 onChange = {(event) => setformDataFunction({...formData, age: event.target.value})}
@@ -52,6 +54,7 @@ export default function BloodRquestForm ({setformDataFunction, formData}) {
                 id="dpi"
                 name="dpi"
                 label="DPI"
+                value={formData.dpi}
                 fullWidth
                 variant="standard"
                 onChange = {(event) => setformDataFunction({...formData, dpi: event.target.value})}
@@ -101,6 +104,7 @@ export default function BloodRquestForm ({setformDataFunction, formData}) {
                     disablePortal
                     id="hospital"
                     name="hospital"
+                    value={formData.hospital}
                     options={hospitals}
                     fullWidth
                     onChange = {(event) => setformDataFunction({...formData, hospital: event.target.value})}
@@ -113,6 +117,7 @@ export default function BloodRquestForm ({setformDataFunction, formData}) {
                     id="units"
                     name="units"
                     label="Unidades (L)"
+                    value={formData.units}
                     fullWidth
                     type="number"
                     onChange = {(event) => setformDataFunction({...formData, units: event.target.value})}
@@ -124,6 +129,7 @@ export default function BloodRquestForm ({setformDataFunction, formData}) {
                 id='observations'
                 name='observations'
                 label="Observaciones y/o requerimientos especiales"
+                value={formData.observations}
                 multiline
                 fullWidth
                 rows={4}
