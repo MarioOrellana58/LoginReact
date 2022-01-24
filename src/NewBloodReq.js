@@ -5,8 +5,6 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import BloodRequestForm from './BloodRequestForm';
-
-
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -32,11 +30,13 @@ function Copyright(props) {
 
 export default function NewBloodReq () { 
     const [currentUser, setCurrentUser] = useState(Parse.User.current());
+    const [formData, setformData] = useState({});
+
     const theme = createTheme();
     const navigate = useNavigate();
     
     const sendBloodDonationRequest = async (event) => {
-        
+        console.log(formData)
     }
 
     if (currentUser !== null) {
@@ -63,7 +63,7 @@ export default function NewBloodReq () {
                     <Typography component="h1" variant="h4" align="center">
                         Ingreso de solicitud
                     </Typography>          
-                    <BloodRequestForm />
+                    <BloodRequestForm setformDataFunction={setformData} formData={formData} />
                     <React.Fragment>                
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <Button

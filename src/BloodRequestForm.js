@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Autocomplete from '@mui/material/Autocomplete';
 
-export default function BloodRquestForm () { 
+export default function BloodRquestForm ({setformDataFunction, formData}) { 
     const hospitals = [ 
         {label: 'Hospital 1', value: 'Hospital 1'},
         {label: 'Hospital 2', value: 'Hospital 2'},
@@ -29,6 +29,7 @@ export default function BloodRquestForm () {
                 label="Nombre"
                 fullWidth
                 variant="standard"
+                onChange = {(event) => setformDataFunction({...formData, completeName: event.target.value})}
                 inputProps={{ maxLength: 100 }}
               />
             </Grid>
@@ -40,6 +41,7 @@ export default function BloodRquestForm () {
                 label="Edad"
                 fullWidth
                 variant="standard"
+                onChange = {(event) => setformDataFunction({...formData, age: event.target.value})}
                 type="number"
                 inputProps={{ maxLength: 3 }}
               />
@@ -52,8 +54,8 @@ export default function BloodRquestForm () {
                 label="DPI"
                 fullWidth
                 variant="standard"
+                onChange = {(event) => setformDataFunction({...formData, dpi: event.target.value})}
                 type="number"
-                onChange={(event) => { console.log(event.target.value) }}
                 inputProps={{ maxLength: 15 }}
               />
             </Grid>
@@ -62,10 +64,10 @@ export default function BloodRquestForm () {
                     <Select
                         labelId="bloodTypeLbl"
                         id="bloodType"
-                        value=""
+                        value={formData.bloodType}
                         label="Tipo de sangre *"
                         fullWidth
-                        onChange={(event) => { console.log(event.target.value) }}
+                        onChange = {(event) => setformDataFunction({...formData, bloodType: event.target.value})}
                     >
                         <MenuItem value="O+">O+</MenuItem>
                         <MenuItem value="O-">O-</MenuItem>
@@ -82,10 +84,11 @@ export default function BloodRquestForm () {
                 <Select
                     labelId="priorityLbl"
                     id="priority"
-                    value=""
+                    value={formData.priority}
                     label="Prioridad *"
                     fullWidth
-                    onChange={(event) => { console.log(event.target.value) }}
+                    onChange = {(event) => setformDataFunction({...formData, priority: event.target.value})}
+                    renderInput={(params) => <TextField {...params} label="Seleccione hospital" />}
                 >
                     <MenuItem value="Alta">Alta</MenuItem>
                     <MenuItem value="Media">Media</MenuItem>
@@ -96,9 +99,11 @@ export default function BloodRquestForm () {
             <Grid item xs={12} sm={6}>
                 <Autocomplete
                     disablePortal
-                    id="combo-box-demo"
+                    id="hospital"
+                    name="hospital"
                     options={hospitals}
                     fullWidth
+                    onChange = {(event) => setformDataFunction({...formData, hospital: event.target.value})}
                     renderInput={(params) => <TextField {...params} label="Seleccione hospital" />}
                 />                
             </Grid>
@@ -110,16 +115,19 @@ export default function BloodRquestForm () {
                     label="Unidades (L)"
                     fullWidth
                     type="number"
+                    onChange = {(event) => setformDataFunction({...formData, units: event.target.value})}
                     inputProps={{ maxLength: 2 }}
                 />
             </Grid>
             <Grid item xs={12}>
             <TextField
+                id='observations'
+                name='observations'
                 label="Observaciones y/o requerimientos especiales"
                 multiline
                 fullWidth
                 rows={4}
-                maxRows={6}
+                onChange = {(event) => setformDataFunction({...formData, observations: event.target.value})}
                 inputProps={{ maxLength: 1000 }}
                 />
             </Grid>
