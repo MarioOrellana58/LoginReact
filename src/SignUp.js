@@ -3,15 +3,15 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
+import Parse from 'parse/dist/parse.min.js';
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -29,14 +29,28 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const usernameValue = data.get('email');
+    const passwordValue = data.get('password');
+    const passwordValue2 = data.get('password2');
+    if (passwordValue !== passwordValue2) {
+        alert('Las contraseñas no coinciden');
+        return;
+    }
+    try {
+        // Since the signUp method returns a Promise, we need to call it using await
+        const createdUser = await Parse.User.signUp(usernameValue, passwordValue);
+        navigate("/NewBloodRequest");
+        return true;
+      } catch (error) {
+        // signUp can fail if any parameter is blank or failed an uniqueness check on the server
+        alert(`Error! ${error}`);
+        return false;
+      }
   };
 
   return (
@@ -55,37 +69,16 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Registro
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Correo Electrónico"
                   name="email"
                   autoComplete="email"
                 />
@@ -95,16 +88,21 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Contraseña"
                   type="password"
                   id="password"
                   autoComplete="new-password"
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                <TextField
+                  required
+                  fullWidth
+                  name="password2"
+                  label="Ingrese de nuevo su contraseña"
+                  type="password"
+                  id="password2"
+                  autoComplete="new-password"
                 />
               </Grid>
             </Grid>
@@ -114,12 +112,12 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Registrarse
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link to="/">
-                  Already have an account? Sign in
+                  Ya tienes una cuenta? Ingresa
                 </Link>
               </Grid>
             </Grid>
