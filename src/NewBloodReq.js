@@ -36,7 +36,23 @@ export default function NewBloodReq () {
     const navigate = useNavigate();
     
     const sendBloodDonationRequest = async (event) => {
-        console.log(formData)
+        //Create your Parse Object
+        const bloodReq = new Parse.Object("BloodRequest");
+
+        bloodReq.set("completeName", formData.completeName);
+        bloodReq.set("age", formData.age);
+        bloodReq.set("dpi", formData.dpi);
+        bloodReq.set("bloodType", formData.bloodType);
+        bloodReq.set("hospital", formData.hospital);
+        bloodReq.set("user", currentUser);
+
+        try{
+            //Save the Object
+            let result = await bloodReq.save()
+            alert('Solicitud enviada exitosamente #' + result.id);
+        }catch(error){
+            alert('La creación de la solicitud falló, código de error: ' + error.message);
+        }
     }
 
     if (currentUser !== null) {
